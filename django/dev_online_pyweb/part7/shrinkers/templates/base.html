@@ -7,6 +7,11 @@
     <title>Fastcampus Django</title>
 </head>
 <body>
-    {{ welcome_msg }}
+    {{ user }} <br>
+    <ul>
+        {% for i in params %}
+            <li>{{ i }}</li>
+        {% endfor %}
+    </ul>
 </body>
 </html>

@@ -16,10 +16,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from shortener.views import index, redirect_index
+from shortener.views import index, redirect_index, get_user
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', index, name='re_index'), # urls에 redirect로 넘어가는 매개변수와 같아야 함.
     path('redirect', redirect_index),
+    path('get_user/<int:user_id>', get_user),
 ]
