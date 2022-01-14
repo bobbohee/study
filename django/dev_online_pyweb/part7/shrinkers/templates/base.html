@@ -13,6 +13,11 @@
             <li>{{ i }}</li>
         {% endfor %}
     </ul>
-    <a href="{% url 're_register' %}">회원가입</a>
+    {% if user.is_authenticated %}
+        <p><a href="{% url 're_logout' %}">로그아웃</a></p>
+    {% else %}
+        <p><a href="{% url 're_register' %}">회원가입</a></p>
+        <p><a href="{% url 're_login' %}">로그인</a></p>
+    {% endif %}
 </body>
 </html>

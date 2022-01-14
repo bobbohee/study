@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fastcampus Django</title>
+</head>
+<body>
+    <h2>로그인</h2>
+    <h4>{% if msg %}{{ msg }}{% endif %}</h4>
+    <form method="post">
+      {% csrf_token %} <!-- 사이트 간 위변조 방지를 위한 token, 사이트 상에서는 안보임 -->
+      {{ form.as_p }}  <!-- as_p = <p> 태그로 나오도록 설정 -->
+      <button type="submit">로그인</button>
+    </form>
+    <p>
+      <a href="{% url 're_index' %}">홈으로</a>
+      <a href="{% url 're_register' %}">회원가입</a>
+    </p>
+</body>
+</html>
