@@ -8,7 +8,7 @@ from shortener.models import Users
 
 
 def index(request):
-    user = Users.objects.filter(username='bobbohee').first()
+    user = Users.objects.filter(id=request.user.id).first()
     # user = Users.objects.get(username='bobbohee') -> 1개만 있어야 함 (0개 또는 2개 이상 리턴되는 경우 Error가 발생해 Validation 체크하는 용도로 많이 사용됨)
     email = user.email if user else 'Anonymous User!'
     if request.user.is_authenticated is False:

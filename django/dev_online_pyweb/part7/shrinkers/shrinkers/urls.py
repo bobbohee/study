@@ -13,8 +13,9 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+import debug_toolbar
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 
 from shortener.views import index, redirect_index, get_user
 
@@ -23,4 +24,5 @@ urlpatterns = [
     path('', index, name='re_index'), # urls에 redirect로 넘어가는 매개변수와 같아야 함.
     path('redirect', redirect_index),
     path('get_user/<int:user_id>', get_user),
+    path('__debug__/', include(debug_toolbar.urls)),
 ]
