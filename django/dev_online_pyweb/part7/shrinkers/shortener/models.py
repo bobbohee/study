@@ -13,7 +13,8 @@ class PayPlan(models.Model):
 
 
 class Users(AbstractUser):
-	pay_plan = models.ForeignKey(PayPlan, on_delete=models.DO_NOTHING, null=True)
+    full_name = models.CharField(max_length=100, null=True)
+    pay_plan = models.ForeignKey(PayPlan, on_delete=models.DO_NOTHING, null=True)
 
 
 # class UserDetail(models.Model):

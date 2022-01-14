@@ -17,7 +17,7 @@ import debug_toolbar
 from django.contrib import admin
 from django.urls import path, include
 
-from shortener.views import index, redirect_index, get_user
+from shortener.views import index, redirect_index, get_user, register
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -25,4 +25,5 @@ urlpatterns = [
     path('redirect', redirect_index),
     path('get_user/<int:user_id>', get_user),
     path('__debug__/', include(debug_toolbar.urls)),
+    path('register', register, name='re_register') # 뒤에 더 붙을 path가 있다면 register/ 로 작성해야 함.
 ]

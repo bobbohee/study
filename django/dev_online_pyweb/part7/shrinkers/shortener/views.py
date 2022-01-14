@@ -1,8 +1,10 @@
 from django.http.response import JsonResponse
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth import login, authenticate
 
 from shortener.models import Users
+from shortener.forms import RegisterForm
 
 # Create your views here.
 
@@ -30,3 +32,19 @@ def get_user(request, user_id):
         if username:
             user = Users.objects.filter(pk=user_id).update(username=username)
             return JsonResponse(status=201, data=dict(msg='You just reached with Post Method!')) # msg가 한글인 경우 safe=False로 설정
+
+def register(request):
+    if request.method == 'POST':
+        form = RegisterForm(request.POST)
+        msg = '올바르지 않은 데이터 입니다.'
+        if form.is_valid():
+            form.save()
+            username = form.cleaned_data.get('username')
+            raw_password = form.cleaned_data.get('password')
+            user = authenticate(username=username, password=raw_password)
+            login(request, user)
+            msg = '회원가입 완료'
+        return render(request, 'register.html', {'form': form, 'msg': msg})
+    else:
+        form = RegisterForm()
+        return render(request, 'register.html', {'form': form})
