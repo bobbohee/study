@@ -1,8 +1,11 @@
+import imp
 from django.http.response import JsonResponse
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
 
 from shortener.models import Users
 from shortener.forms import RegisterForm
@@ -69,3 +72,11 @@ def login_view(request): # login으로 해버리면 django.contrib.auth.login과
 def logout_view(request): # logout으로 해버리면 django.contrib.auth.logout과 겹침
     logout(request)
     return redirect('re_index')
+
+@login_required
+def list_view(request):
+    page = int(request.GET.get('p', 1))
+    users = Users.objects.all().order_by('-id')
+    paginator = Paginator(users, 10) # 한 페이지에 10개씩 나타냄
+    users = paginator.get_page(page)
+    return render(request, 'boards.html', {'users': users})
