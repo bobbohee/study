@@ -1,12 +1,6 @@
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fastcampus Djano</title>
-</head>
-<body>
+{% extends 'base.html' %}
+{% load custom_tags %}
+{% block content %}
     <h2>유저 리스트</h2>
     <h4>{%if msg %}{{ msg }}{% endif %}</h4>
     <table>
@@ -21,7 +15,7 @@
         <tr>
             <td>{{ u.id }}</td>
             <td>{{ u.username }}</td>
-            <td>{{ u.email }}</td>
+            <td>{{ u.email|email_ma }}</td>
             <td>{{ u.date_joined }}</td>
             <td>{{ u.pay_plan.name }}</td>
         </tr>
@@ -56,5 +50,6 @@
         <a href="{% url 're_index' %}">홈으로</a>
         <a href="{% url 're_register' %}">회원가입</a>
     </p>
-</body>
-</html>
+    {% test_tags %}
+    {% include 'include_test.html' %}
+{% endblock %} 

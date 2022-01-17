@@ -19,5 +19,8 @@
         <p><a href="{% url 're_register' %}">회원가입</a></p>
         <p><a href="{% url 're_login' %}">로그인</a></p>
     {% endif %}
+
+    {% block content %}
+    {% endblock %} 
 </body>
 </html>
