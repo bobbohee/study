@@ -1,4 +1,3 @@
-import imp
 from django.http.response import JsonResponse
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
@@ -8,7 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 
 from shortener.models import Users
-from shortener.forms import RegisterForm
+from shortener.forms import RegisterForm, LoginForm
 
 # Create your views here.
 
@@ -54,24 +53,44 @@ def register(request):
         return render(request, 'register.html', {'form': form})
 
 def login_view(request): # login으로 해버리면 django.contrib.auth.login과 겹침
+    is_ok = False
     if request.method == 'POST':
-        form = AuthenticationForm(request, request.POST)
-        msg = '가입되어 있지 않거나 로그인 정보가 잘못 되었습니다.'
+        form = LoginForm(request.POST)
         if form.is_valid():
-            username = form.cleaned_data.get('username')
+            email = form.cleaned_data.get('email')   
             raw_password = form.cleaned_data.get('password')
-            user = authenticate(username=username, password=raw_password)
-            if user is not None:
-                msg = '로그인 성공'
-                login(request, user)
-        return render(request, 'login.html', {'form': form, 'msg': msg})
+            remember_me = form.cleaned_data.get('remember_me')
+            msg = '올바른 유저 ID와 패스워드를 입력하세요.'
+            try:
+                user = Users.objects.get(email=email)
+            except Users.DoesNotExist:
+                msg = '올바른 유저 ID와 패스워드를 입력하세요.'
+            else:
+                if user.check_password(raw_password):
+                    msg = None
+                    login(request, user)
+                    is_ok = True
+                    request.session['remember_me'] = remember_me
+
+                    # 브라우저를 닫으면 세션 종료 
+                    # 브라우저에 따라서 되는 브라우저가 있고, 안되는 브라우저(크롬)도 있음
+                    # if not remember_me:
+                        # request.session.set_expiry(0)
+        else:
+            msg = '올바른 유저 ID와 패스워드를 입력하세요.'
     else:
-        form = AuthenticationForm()
-        return render(request, 'login.html', {'form': form})
+        msg = None
+        form = LoginForm()
+
+    # AuthenticationForm 사용 시, class 적용
+    # for visible in form.visible_fields():
+    #     visible.field.widget.attrs['placeholder'] = '유저 ID' if visible.name == 'username' else '패스워드'
+    #     visible.field.widget.attrs['class'] = 'form-control'
+    return render(request, 'login.html', {'form': form, 'msg': msg, 'is_ok': is_ok})
 
 def logout_view(request): # logout으로 해버리면 django.contrib.auth.logout과 겹침
     logout(request)
-    return redirect('re_index')
+    return redirect('re_login')
 
 @login_required
 def list_view(request):
